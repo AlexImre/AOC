@@ -1,5 +1,3 @@
-// fetch data frm https://adventofcode.com/2024/day/1/input
-
 import fs from "fs"
 fs.readFile("TEXT3.txt", "utf8", (err, data) => {
   if (err) {
@@ -12,8 +10,8 @@ fs.readFile("TEXT3.txt", "utf8", (err, data) => {
     .map((line) => line.trim())
     .join("")
 
-  const subString = /mul\(\d{1,3},\d{1,3}\)/g
-  const numbers = /\d{1,3}(?=,|\))/g
+  const mulStringRegex = /mul\(\d{1,3},\d{1,3}\)/g
+  const mulNumbersRegex = /\d{1,3}(?=,|\))/g
 
   // everything on left is do, and right is dont?
   const split = lines.split("do()")
@@ -26,10 +24,12 @@ fs.readFile("TEXT3.txt", "utf8", (err, data) => {
 
   let TOTAL = 0
   splitAgain.forEach(([good, bad]) => {
-    const matches = good.match(subString)
-    const numbersRes = matches.map((match) => match.match(numbers))
+    const mulStrings = good.match(mulStringRegex)
+    const mulNumbers = mulStrings.map((mulString) =>
+      mulString.match(mulNumbersRegex)
+    )
 
-    const total = numbersRes.reduce((acc, curr) => {
+    const total = mulNumbers.reduce((acc, curr) => {
       const [num1, num2] = curr
       return acc + Number(num1) * Number(num2)
     }, 0)
